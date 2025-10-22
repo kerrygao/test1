@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusCloud - 下一代VPS解决方案</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #00a8ff;
+            --secondary: #9c88ff;
+            --dark: #0f1419;
+            --darker: #0a0e12;
+            --light: #eef2f7;
+            --card-bg: rgba(25, 30, 40, 0.7);
+            --card-border: rgba(0, 168, 255, 0.3);
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .particles-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, var(--darker) 0%, #1a1f2e 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 导航栏 */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--darker);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.4);
+        }
+
+        /* 英雄区域 */
+        .hero {
+            display: flex;
+            align-items: center;
+            min-height: 80vh;
+            padding: 50px 0;
+        }
+
+        .hero-content {
+            flex: 1;
+            padding-right: 50px;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: rgba(238, 242, 247, 0.8);
+            line-height: 1.6;
+        }
+
+        .server-dashboard {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .server-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(238, 242, 247, 0.7);
+        }
+
+        /* 套餐部分 */
+        .section-title {
+            text-align: center;
+            margin: 60px 0 40px;
+            font-size: 2.5rem;
+        }
+
+        .section-title span {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .plan-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 168, 255, 0.2);
+            border-color: var(--primary);
+        }
+
+        .plan-card.popular::before {
+            content: '热门选择';
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: var(--primary);
+            color: var(--darker);
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .plan-header {
+            margin-bottom: 25px;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            color: rgba(238, 242, 247, 0.7);
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .plan-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+        }
+
+        .plan-features li i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        /* 特性部分 */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid var(--card-border);
+            text-align: center;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        /* CTA部分 */
+        .cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 15px;
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta .btn {
+            background: var(--darker);
+            color: var(--light);
+            font-size: 1.1rem;
+            padding: 15px 30px;
+        }
+
+        /* 页脚 */
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column a {
+            color: rgba(238, 242, 247, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(238, 242, 247, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .hero-content {
+                padding-right: 0;
+                margin-bottom: 40px;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles-bg" id="particles-bg"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-server"></i>
+                </div>
+                <div class="logo-text">NexusCloud</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#">产品</a></li>
+                    <li><a href="#">解决方案</a></li>
+                    <li><a href="#">文档</a></li>
+                    <li><a href="#">支持</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button class="btn btn-outline">登录</button>
+                <button class="btn btn-primary">免费试用</button>
+            </div>
+        </header>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1>下一代 <span>VPS 解决方案</span> 为现代应用提供动力</h1>
+                <p>NexusCloud提供高性能、可扩展的虚拟私有服务器，配备最新硬件和智能管理工具，让您的业务在云端无缝运行。</p>
+                <button class="btn btn-primary" style="padding: 15px 30px; font-size: 1.1rem;">立即部署 <i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div class="hero-image">
+                <div class="server-dashboard">
+                    <div class="dashboard-header">
+                        <h3>服务器状态</h3>
+                        <div class="status-indicator">
+                            <span style="color: #2ecc71;"><i class="fas fa-circle"></i> 运行中</span>
+                        </div>
+                    </div>
+                    <div class="server-stats">
+                        <div class="stat">
+                            <div class="stat-value">98.7%</div>
+                            <div class="stat-label">正常运行时间</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">24ms</div>
+                            <div class="stat-label">平均延迟</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">2.4GHz</div>
+                            <div class="stat-label">CPU 使用率</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">512MB</div>
+                            <div class="stat-label">内存使用</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <h2 class="section-title">选择您的 <span>VPS 套餐</span></h2>
+
+        <section class="plans">
+            <div class="plan-card">
+                <div class="plan-header">
+                    <div class="plan-name">基础版</div>
+                    <div class="plan-price">$9<span>/月</span></div>
+                    <div class="plan-desc">适合个人项目和小型网站</div>
+                </div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> 1 vCPU 核心</li>
+                    <li><i class="fas fa-check"></i> 1GB 内存</li>
+                    <li><i class="fas fa-check"></i> 25GB SSD 存储</li>
+                    <li><i class="fas fa-check"></i> 1TB 带宽</li>
+                    <li><i class="fas fa-check"></i> 免费 SSL 证书</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">选择套餐</button>
+            </div>
+
+            <div class="plan-card popular">
+                <div class="plan-header">
+                    <div class="plan-name">专业版</div>
+                    <div class="plan-price">$19<span>/月</span></div>
+                    <div class="plan-desc">最适合中小型企业</div>
+                </div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> 2 vCPU 核心</li>
+                    <li><i class="fas fa-check"></i> 4GB 内存</li>
+                    <li><i class="fas fa-check"></i> 80GB SSD 存储</li>
+                    <li><i class="fas fa-check"></i> 2TB 带宽</li>
+                    <li><i class="fas fa-check"></i> 免费 SSL 证书</li>
+                    <li><i class="fas fa-check"></i> 每日备份</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;">选择套餐</button>
+            </div>
+
+            <div class="plan-card">
+                <div class="plan-header">
+                    <div class="plan-name">企业版</div>
+                    <div class="plan-price">$49<span>/月</span></div>
+                    <div class="plan-desc">为高流量应用设计</div>
+                </div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> 4 vCPU 核心</li>
+                    <li><i class="fas fa-check"></i> 8GB 内存</li>
+                    <li><i class="fas fa-check"></i> 160GB SSD 存储</li>
+                    <li><i class="fas fa-check"></i> 5TB 带宽</li>
+                    <li><i class="fas fa-check"></i> 免费 SSL 证书</li>
+                    <li><i class="fas fa-check"></i> 每日备份</li>
+                    <li><i class="fas fa-check"></i> 优先支持</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">选择套餐</button>
+            </div>
+        </section>
+
+        <h2 class="section-title">为什么选择 <span>NexusCloud</span></h2>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="feature-title">闪电速度</h3>
+                <p>采用最新NVMe SSD和高速网络，确保您的应用以最快速度运行。</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">企业级安全</h3>
+                <p>多层安全防护，包括DDoS防护、防火墙和实时威胁检测。</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                </div>
+                <h3 class="feature-title">弹性扩展</h3>
+                <p>根据需求轻松升级资源，无需停机时间。</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3 class="feature-title">24/7 支持</h3>
+                <p>我们的专家团队全天候为您提供技术支持。</p>
+            </div>
+        </section>
+
+        <section class="cta">
+            <h2>准备好开始了吗？</h2>
+            <p>立即注册并获取 $10 信用额度，体验下一代VPS的强大功能。</p>
+            <button class="btn">立即开始免费试用</button>
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>产品</h3>
+                    <ul>
+                        <li><a href="#">VPS 主机</a></li>
+                        <li><a href="#">云服务器</a></li>
+                        <li><a href="#">专用服务器</a></li>
+                        <li><a href="#">托管服务</a></li>
+                        <li><a href="#">备份解决方案</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>资源</h3>
+                    <ul>
+                        <li><a href="#">文档</a></li>
+                        <li><a href="#">教程</a></li>
+                        <li><a href="#">博客</a></li>
+                        <li><a href="#">状态页面</a></li>
+                        <li><a href="#">API 文档</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>公司</h3>
+                    <ul>
+                        <li><a href="#">关于我们</a></li>
+                        <li><a href="#">职业</a></li>
+                        <li><a href="#">合作伙伴</a></li>
+                        <li><a href="#">新闻</a></li>
+                        <li><a href="#">联系</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>联系</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> support@nexuscloud.com</li>
+                        <li><i class="fas fa-phone"></i> +1 (800) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 硅谷, 加利福尼亚</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                &copy; 2023 NexusCloud Inc. 保留所有权利。
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 简单的粒子背景效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesBg = document.getElementById('particles-bg');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = Math.random() * 3 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.background = 'rgba(0, 168, 255, 0.5)';
+                particle.style.borderRadius = '50%';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.boxShadow = '0 0 10px rgba(0, 168, 255, 0.5)';
+                
+                particlesBg.appendChild(particle);
+                
+                // 简单的动画
+                animateParticle(particle);
+            }
+            
+            function animateParticle(particle) {
+                let x = parseFloat(particle.style.left);
+                let y = parseFloat(particle.style.top);
+                let xSpeed = (Math.random() - 0.5) * 0.5;
+                let ySpeed = (Math.random() - 0.5) * 0.5;
+                
+                function move() {
+                    x += xSpeed;
+                    y += ySpeed;
+                    
+                    if (x < 0 || x > 100) xSpeed *= -1;
+                    if (y < 0 || y > 100) ySpeed *= -1;
+                    
+                    particle.style.left = x + 'vw';
+                    particle.style.top = y + 'vh';
+                    
+                    requestAnimationFrame(move);
+                }
+                
+                move();
+            }
+        });
+    </script>
+</body>
+</html>
